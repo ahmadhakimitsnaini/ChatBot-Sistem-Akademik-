@@ -1,0 +1,17 @@
+# ==============================================================================
+# DAFTAR DEPENDENSI PYTHON (requirements.txt)
+# Digunakan untuk instalasi lokal dan deployment di Streamlit Community Cloud
+# ==============================================================================
+
+# 1. Kerangka Kerja Antarmuka Web (UI)
+streamlit>=1.38.0,<2.0.0
+
+# 2. Manipulasi Data & Mesin Matematika Mini-RAG (TF-IDF + Cosine Similarity)
+pandas>=2.0.0,<3.0.0
+scikit-learn>=1.3.0,<2.0.0
+
+# 3. Manajemen Variabel Lingkungan Lokal (.env)
+python-dotenv>=1.0.0,<2.0.0
+
+# 4. SDK Cloud LLM API (Google Gemini SDK resmi terbaru)
+google-genai>=1.0.0,<2.0.0

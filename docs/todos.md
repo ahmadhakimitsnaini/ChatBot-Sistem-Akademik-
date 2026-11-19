@@ -8,7 +8,7 @@
 
 ## Ringkasan Progres Fase
 - [x] **Fase 1:** Inisialisasi Proyek, Lingkungan Kerja & Keamanan Kredensial
-- [ ] **Fase 2:** Penyusunan & Pengayaan Dataset Basis Pengetahuan (`faq_akademik.csv`)
+- [x] **Fase 2:** Penyusunan & Pengayaan Dataset Basis Pengetahuan (`faq_akademik.csv`)
 - [ ] **Fase 3:** Pengembangan Mesin Utama Mini-RAG & Integrasi Cloud LLM (`rag_engine.py`)
 - [ ] **Fase 4:** Pembangunan Antarmuka Pengguna Interaktif (`app.py`)
 - [ ] **Fase 5:** Pengujian Sistem, Kalibrasi & Penanganan Kasus Batas (*Edge Cases*)

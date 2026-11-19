@@ -42,47 +42,47 @@
 ## Fase 2: Penyusunan & Pengayaan Dataset Basis Pengetahuan (`faq_akademik.csv`)
 **Tujuan:** Membangun basis data FAQ minimal **28–35 entri** (*FR-01*) yang terstruktur dan diperkaya kata kunci/sinonim bahasa sehari-hari mahasiswa untuk mengatasi keterbatasan pencocokan kata pada TF-IDF (*Mitigasi Risiko 1 & TC-02*).
 
-- [ ] **2.1. Perancangan Skema Kolom CSV**
-  - [ ] Gunakan kolom wajib sesuai PRD: `id`, `kategori`, `pertanyaan`, `jawaban`, `sumber_pasal`.
-  - [ ] *(Rekomendasi Hasil Analisa)* Pastikan di dalam teks `pertanyaan` atau kolom tambahan/gabungan sudah disisipkan sinonim istilah populer mahasiswa (misal: *"bolos/absen/alfa"*, *"DO/keluar/dikeluarkan"*, *"IP/nilai/indeks prestasi"*, *"telat/terlambat"*, *"bayar/UKT/SPP"*).
-- [ ] **2.2. Pengisian Entri Kategori 1: Registrasi & KRS (6–7 Entri)**
-  - [ ] Jadwal dan prosedur pengisian KRS setiap awal semester.
-  - [ ] Ketentuan dan batas waktu perubahan/revisi KRS (*KRS Batal-Tambah*).
-  - [ ] Aturan penentuan beban SKS maksimal berdasarkan IPS semester sebelumnya.
-  - [ ] Sanksi dan prosedur jika terlambat melakukan registrasi ulang / pengisian KRS.
-  - [ ] Prosedur konsultasi dan persetujuan KRS oleh Dosen Wali (Pembimbing Akademik).
-  - [ ] Ketentuan pengambilan mata kuliah lintas semester atau mata kuliah bersyarat (*prasyarat*).
-- [ ] **2.3. Pengisian Entri Kategori 2: Perkuliahan & Kehadiran (6–7 Entri)**
-  - [ ] Syarat minimal persentase kehadiran (misal $\ge 75\%$ atau $80\%$) untuk dapat mengikuti UAS *(Kritis untuk TC-01 & TC-02: sertakan kata kunci "bolos", "absen", "tidak masuk", "ujian akhir")*.
-  - [ ] Prosedur pengajuan izin tidak hadir karena sakit (surat dokter) atau dispensasi kegiatan kampus.
-  - [ ] Aturan toleransi keterlambatan hadir di kelas dan tata tertib perkuliahan.
-  - [ ] Ketentuan pelaksanaan Ujian Tengah Semester (UTS) dan Ujian Akhir Semester (UAS).
-  - [ ] Prosedur ujian susulan bagi mahasiswa yang berhalangan hadir karena alasan sah.
-  - [ ] Beban belajar per 1 SKS (tatap muka, tugas terstruktur, dan belajar mandiri).
-- [ ] **2.4. Pengisian Entri Kategori 3: Evaluasi & Penilaian (6–7 Entri)**
-  - [ ] Tabel konversi nilai angka ke nilai huruf dan bobot (A, AB/B+, B, BC/C+, C, D, E).
-  - [ ] Rumus dan cara perhitungan Indeks Prestasi Semester (IPS) dan Indeks Prestasi Kumulatif (IPK).
-  - [ ] Batas nilai minimal kelulusan mata kuliah wajib dan mata kuliah pilihan.
-  - [ ] Ketentuan mengulang mata kuliah (remedial/semester pendek) untuk perbaikan nilai.
-  - [ ] Prosedur komplain atau sanggah nilai jika terdapat kesalahan input oleh dosen.
-  - [ ] Komponen penilaian akhir mata kuliah (kehadiran, tugas, kuis, UTS, UAS).
-- [ ] **2.5. Pengisian Entri Kategori 4: Status Mahasiswa & Administrasi (6–7 Entri)**
-  - [ ] Syarat, batas maksimal, dan prosedur pengajuan Cuti Akademik (berhenti studi sementara).
-  - [ ] Prosedur pengajuan aktif kuliah kembali setelah masa cuti akademik berakhir.
-  - [ ] Status mahasiswa Tidak Aktif (Mangkir) dan konsekuensi administratifnya.
-  - [ ] Kriteria evaluasi studi bertahap, surat peringatan akademik, dan aturan *Drop Out* (DO) / putus studi.
-  - [ ] Batas masa studi maksimal program Sarjana/Diploma.
-  - [ ] Prosedur pembayaran UKT, keringanan, atau penundaan pembayaran UKT.
-- [ ] **2.6. Pengisian Entri Kategori 5: Magang / PKL & Tugas Akhir (6–7 Entri)**
-  - [ ] Syarat jumlah SKS minimal dan IPK untuk mengambil Kerja Praktik (KP) / Magang / PKL.
-  - [ ] Syarat akademik dan administratif pengajuan proposal / judul Tugas Akhir (Skripsi).
-  - [ ] Ketentuan pembimbingan dan masa berlaku pengerjaan Tugas Akhir.
-  - [ ] Syarat pendaftaran Sidang Tugas Akhir (bebas tanggungan SKS, nilai D/E, perpustakaan, administrasi).
-  - [ ] Syarat kelulusan akhir, pendaftaran Yudisium, dan Wisuda.
-  - [ ] Predikat kelulusan (*Cumlaude* / Dengan Pujian, Sangat Memuaskan, Memuaskan) beserta syarat masa studi & IPK.
-- [ ] **2.7. Validasi Dataset CSV**
-  - [ ] Pastikan total baris $\ge 28$ entri (target optimal: **30–35 entri**).
-  - [ ] Pastikan format tanda kutip (`"..."`) pada CSV valid, tidak ada kolom kosong (`NaN`), dan encoding menggunakan `UTF-8`.
+- [x] **2.1. Perancangan Skema Kolom CSV**
+  - [x] Gunakan kolom wajib sesuai PRD: `id`, `kategori`, `pertanyaan`, `jawaban`, `sumber_pasal`.
+  - [x] *(Rekomendasi Hasil Analisa)* Pastikan di dalam teks `pertanyaan` atau kolom tambahan/gabungan sudah disisipkan sinonim istilah populer mahasiswa (misal: *"bolos/absen/alfa"*, *"DO/keluar/dikeluarkan"*, *"IP/nilai/indeks prestasi"*, *"telat/terlambat"*, *"bayar/UKT/SPP"*).
+- [x] **2.2. Pengisian Entri Kategori 1: Registrasi & KRS (6–7 Entri)**
+  - [x] Jadwal dan prosedur pengisian KRS setiap awal semester.
+  - [x] Ketentuan dan batas waktu perubahan/revisi KRS (*KRS Batal-Tambah*).
+  - [x] Aturan penentuan beban SKS maksimal berdasarkan IPS semester sebelumnya.
+  - [x] Sanksi dan prosedur jika terlambat melakukan registrasi ulang / pengisian KRS.
+  - [x] Prosedur konsultasi dan persetujuan KRS oleh Dosen Wali (Pembimbing Akademik).
+  - [x] Ketentuan pengambilan mata kuliah lintas semester atau mata kuliah bersyarat (*prasyarat*).
+- [x] **2.3. Pengisian Entri Kategori 2: Perkuliahan & Kehadiran (6–7 Entri)**
+  - [x] Syarat minimal persentase kehadiran (misal $\ge 75\%$ atau $80\%$) untuk dapat mengikuti UAS *(Kritis untuk TC-01 & TC-02: sertakan kata kunci "bolos", "absen", "tidak masuk", "ujian akhir")*.
+  - [x] Prosedur pengajuan izin tidak hadir karena sakit (surat dokter) atau dispensasi kegiatan kampus.
+  - [x] Aturan toleransi keterlambatan hadir di kelas dan tata tertib perkuliahan.
+  - [x] Ketentuan pelaksanaan Ujian Tengah Semester (UTS) dan Ujian Akhir Semester (UAS).
+  - [x] Prosedur ujian susulan bagi mahasiswa yang berhalangan hadir karena alasan sah.
+  - [x] Beban belajar per 1 SKS (tatap muka, tugas terstruktur, dan belajar mandiri).
+- [x] **2.4. Pengisian Entri Kategori 3: Evaluasi & Penilaian (6–7 Entri)**
+  - [x] Tabel konversi nilai angka ke nilai huruf dan bobot (A, AB/B+, B, BC/C+, C, D, E).
+  - [x] Rumus dan cara perhitungan Indeks Prestasi Semester (IPS) dan Indeks Prestasi Kumulatif (IPK).
+  - [x] Batas nilai minimal kelulusan mata kuliah wajib dan mata kuliah pilihan.
+  - [x] Ketentuan mengulang mata kuliah (remedial/semester pendek) untuk perbaikan nilai.
+  - [x] Prosedur komplain atau sanggah nilai jika terdapat kesalahan input oleh dosen.
+  - [x] Komponen penilaian akhir mata kuliah (kehadiran, tugas, kuis, UTS, UAS).
+- [x] **2.5. Pengisian Entri Kategori 4: Status Mahasiswa & Administrasi (6–7 Entri)**
+  - [x] Syarat, batas maksimal, dan prosedur pengajuan Cuti Akademik (berhenti studi sementara).
+  - [x] Prosedur pengajuan aktif kuliah kembali setelah masa cuti akademik berakhir.
+  - [x] Status mahasiswa Tidak Aktif (Mangkir) dan konsekuensi administratifnya.
+  - [x] Kriteria evaluasi studi bertahap, surat peringatan akademik, dan aturan *Drop Out* (DO) / putus studi.
+  - [x] Batas masa studi maksimal program Sarjana/Diploma.
+  - [x] Prosedur pembayaran UKT, keringanan, atau penundaan pembayaran UKT.
+- [x] **2.6. Pengisian Entri Kategori 5: Magang / PKL & Tugas Akhir (6–7 Entri)**
+  - [x] Syarat jumlah SKS minimal dan IPK untuk mengambil Kerja Praktik (KP) / Magang / PKL.
+  - [x] Syarat akademik dan administratif pengajuan proposal / judul Tugas Akhir (Skripsi).
+  - [x] Ketentuan pembimbingan dan masa berlaku pengerjaan Tugas Akhir.
+  - [x] Syarat pendaftaran Sidang Tugas Akhir (bebas tanggungan SKS, nilai D/E, perpustakaan, administrasi).
+  - [x] Syarat kelulusan akhir, pendaftaran Yudisium, dan Wisuda.
+  - [x] Predikat kelulusan (*Cumlaude* / Dengan Pujian, Sangat Memuaskan, Memuaskan) beserta syarat masa studi & IPK.
+- [x] **2.7. Validasi Dataset CSV**
+  - [x] Pastikan total baris $\ge 28$ entri (target optimal: **30–35 entri**).
+  - [x] Pastikan format tanda kutip (`"..."`) pada CSV valid, tidak ada kolom kosong (`NaN`), dan encoding menggunakan `UTF-8`.
 
 ---
 

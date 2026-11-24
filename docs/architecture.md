@@ -42,7 +42,7 @@ flowchart TD
     subgraph DataAndExternal ["Lapisan Data & Layanan Eksternal"]
         CSV[("faq_akademik.csv (≥28–35 Entri Pedoman)")]
         SEC["Manajemen Kredensial (st.secrets / .env)"]
-        LLM[["Cloud LLM API (Google Gemini / Groq)"]]
+        LLM[["Cloud LLM API (DeepSeek API - deepseek-chat)"]]
     end
 
     U --> SS
@@ -125,8 +125,18 @@ Untuk menjaga kebersihan kode, komunikasi antara `app.py` dan `rag_engine.py` di
 ### 4.1. Spesifikasi Fungsi di `rag_engine.py`
 
 ```python
-# 1. Memuat CSV dan membangun indeks TF-IDF
-def initialize_rag_engine(csv_path: str = "faq_akademik.csv") -> dict:
+# 0. Pra-pemrosesan teks & pemuatan dataset CSV
+def preprocess_text(text: object) -> str:
+    """Menormalkan teks (lowercase, pertahankan angka/desimal & alfanumerik, rapikan spasi)."""
+
+def load_faq_data(csv_path: str | Path = DEFAULT_CSV_PATH) -> pd.DataFrame:
+    """Memuat CSV FAQ, memvalidasi skema & keunikan ID, serta membentuk kolom virtual 'search_text'."""
+
+def build_tfidf_index(df: pd.DataFrame) -> tuple[TfidfVectorizer, csr_matrix]:
+    """Membangun vectorizer dan matriks TF-IDF dari kolom 'search_text'."""
+
+# 1. Memuat CSV dan membangun indeks TF-IDF (Entry point untuk @st.cache_resource)
+def initialize_rag_engine(csv_path: str | Path = DEFAULT_CSV_PATH) -> dict:
     """
     Mengembalikan objek engine berisi:
     - 'df': pandas.DataFrame (dataset FAQ lengkap)
@@ -151,7 +161,11 @@ def retrieve_faq(query: str, engine: dict, top_k: int = 3) -> list[dict]:
     ]
     """
 
-# 3. Fungsi Orkestrator Utama yang dipanggil oleh app.py
+# 3. Resolusi API Key Hibrida (st.secrets -> .env -> None)
+def get_api_key(env_var: str = "DEEPSEEK_API_KEY") -> str | None:
+    """Mengambil kunci API DeepSeek dari st.secrets atau variabel lingkungan (.env)."""
+
+# 4. Fungsi Orkestrator Utama yang dipanggil oleh app.py
 def ask_academic_assistant(
     query: str,
     engine: dict,
@@ -308,8 +322,10 @@ ChatBot Akademik/
 ├── requirements.txt        # [Konfigurasi Deploy] Daftar pustaka Python untuk instalasi lokal & Streamlit Cloud.
 ├── .env.example            # [Template Konfigurasi] Contoh file variabel lingkungan tanpa API Key asli.
 ├── .gitignore              # [Keamanan Git] Mencegah .env, secrets.toml, dan cache Python terunggah ke GitHub.
-├── PRD.md                  # [Dokumentasi Produk] Spesifikasi kebutuhan fungsional & non-fungsional.
-├── architecture.md         # [Dokumentasi Teknis] Cetak biru arsitektur sistem, alur data, & kontrak modul.
-├── todos.md                # [Manajemen Proyek] Roadmap dan daftar periksa pengerjaan bertahap.
-└── README.md               # [Dokumentasi Publik] Panduan penggunaan, penjelasan sumber data, & link demo.
+├── README.md               # [Dokumentasi Publik] Panduan penggunaan, penjelasan sumber data, & link demo.
+└── docs/
+    ├── PRD.md              # [Dokumentasi Produk] Spesifikasi kebutuhan fungsional & non-fungsional.
+    ├── architecture.md     # [Dokumentasi Teknis] Cetak biru arsitektur sistem, alur data, & kontrak modul.
+    ├── todos.md            # [Manajemen Proyek] Roadmap dan daftar periksa pengerjaan bertahap.
+    └── role.md             # [Dokumentasi Peran] Panduan kolaborasi pengerjaan proyek.
 ```

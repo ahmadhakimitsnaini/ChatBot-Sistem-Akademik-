@@ -13,5 +13,5 @@ scikit-learn>=1.3.0,<2.0.0
 # 3. Manajemen Variabel Lingkungan Lokal (.env)
 python-dotenv>=1.0.0,<2.0.0
 
-# 4. SDK Cloud LLM API (Google Gemini SDK resmi terbaru)
-google-genai>=1.0.0,<2.0.0
+# 4. SDK Cloud LLM API (OpenAI-compatible SDK untuk DeepSeek API)
+openai>=1.0.0,<3.0.0

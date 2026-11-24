@@ -51,7 +51,7 @@ Proyek dinyatakan berhasil apabila memenuhi kriteria berikut (selaras dengan rub
 ### 5.1 Dalam Ruang Lingkup (*In-Scope*)
 * Basis pengetahuan terstruktur minimal $28$–$35$ entri FAQ yang diekstrak dari Buku Pedoman Akademik Kampus.
 * Mesin *retriever* lokal menggunakan `TfidfVectorizer` dan `cosine_similarity` (`scikit-learn`).
-* Integrasi dengan satu penyedia *Cloud LLM API* (direkomendasikan Google Gemini API atau Groq API yang memiliki *free tier*).
+* Integrasi dengan penyedia *Cloud LLM API* menggunakan **DeepSeek API** (`deepseek-chat` melalui SDK `openai` yang *OpenAI-compatible*).
 * Antarmuka *chat* interaktif di Streamlit lengkap dengan riwayat percakapan (`st.session_state`), tombol pertanyaan cepat, tombol reset, dan *expander* referensi sumber FAQ.
 * *Deployment* publik melalui GitHub dan Streamlit Community Cloud dengan manajemen kunci API aman (`st.secrets`).
 
@@ -109,7 +109,7 @@ Proyek dinyatakan berhasil apabila memenuhi kriteria berikut (selaras dengan rub
         └──► Jika skor tertinggi >= threshold
                   │  3. Kirim Top-3 Konteks FAQ + Pertanyaan + System Prompt
                   ▼
-           [Cloud LLM API (Gemini / Groq)]
+           [Cloud LLM API (DeepSeek - deepseek-chat)]
                   │  4. Kembalikan jawaban natural berbasis konteks
                   ▼
 [app.py (Streamlit UI)] ──► Tampilkan Jawaban + Expander Referensi + Simpan ke Session State
@@ -162,14 +162,17 @@ chatbot-asisten-akademik/
 
 ## 11. Rencana Deployment Online (Streamlit Community Cloud)
 
-1. **Persiapan Dependensi:** Buat file `requirements.txt` berisi pustaka minimal yang dipakai (misal: `streamlit`, `pandas`, `scikit-learn`, `google-genai` atau `groq`, `python-dotenv`).
+1. **Persiapan Dependensi:** Buat file `requirements.txt` berisi pustaka minimal yang dipakai (`streamlit`, `pandas`, `scikit-learn`, `openai`, `python-dotenv`).
 2. **Unggah ke GitHub:** Inisialisasi repositori Git, pastikan `.env` dan `.streamlit/secrets.toml` tercantum di `.gitignore`, lalu *push* seluruh file proyek ke repositori GitHub.
 3. **Konfigurasi di Streamlit Cloud:**
    * Masuk ke `share.streamlit.io` menggunakan akun GitHub.
    * Pilih **Create app** $\rightarrow$ arahkan ke repositori, branch `main`, dan file utama `app.py`.
    * Buka menu **Advanced settings $\rightarrow$ Secrets**, lalu masukkan kunci API dengan format TOML:
      ```toml
-     LLM_API_KEY = "masukkan_api_key_asli_di_sini"
+     DEEPSEEK_API_KEY = "masukkan_api_key_asli_di_sini"
+     DEEPSEEK_BASE_URL = "https://api.deepseek.com"
+     DEEPSEEK_MODEL = "deepseek-chat"
+     RAG_THRESHOLD = "0.18"
      ```
 4. **Verifikasi Publik:** Uji tautan URL publik aplikasi dari perangkat berbeda (laptop dan *smartphone*) untuk memastikan seluruh skenario uji (TC-01 hingga TC-06) berjalan lancar.
 

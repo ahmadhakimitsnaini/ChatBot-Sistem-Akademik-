@@ -36,6 +36,10 @@ BENCHMARK_QUERIES: list[tuple[str, str, set[int] | None]] = [
     ("PARAPH-10", "Batas waktu ambil ijazah dan transkrip setelah lulus berapa lama?", {21}),
     ("PARAPH-11", "Ikut MBKM bisa konversi berapa SKS?", {30}),
     ("PARAPH-12", "Kalau gak lulus ujian sidang Tugas Akhir gimana?", {32}),
+    ("TYPO-01", "bagaimana cara regristrasi dan krs", {1}),
+    ("TYPO-02", "telat daftar ulng sanksinya apa", {2}),
+    ("TYPO-03", "syarat cumlade ipk berapa", {34}),
+    ("SHORT-01", "syarat cuti", {22}),
     # 3. Pertanyaan Out-of-Scope & Gibberish (Harus Ditolak < θ)
     ("OOS-01", "Resep nasi goreng yang enak apa ya?", None),
     ("OOS-02", "Siapa presiden Indonesia sekarang?", None),

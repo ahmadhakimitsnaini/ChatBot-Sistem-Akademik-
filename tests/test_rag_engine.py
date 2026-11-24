@@ -100,6 +100,11 @@ class TestRagEngine(unittest.TestCase):
             ("Syarat IPK cumlaude pujian di PNM berapa?", {34}),
             ("Gelar lulusan D3 Teknologi Informasi PNM apa?", {35}),
             ("Kapan jadwal UTS dan UAS kalender akademik 2025/2026?", {4, 14}),
+            # Uji toleransi typo & pertanyaan sangat singkat
+            ("bagaimana cara regristrasi dan krs", {1}),
+            ("syarat cuti", {22}),
+            ("telat daftar ulng sanksinya apa", {2}),
+            ("syarat cumlade ipk berapa", {34}),
         ]
         for query, expected_ids in cases:
             refs = rag_engine.retrieve_faq(query, self.engine, top_k=3)

@@ -34,11 +34,11 @@ DEFAULT_CSV_PATH: Path = Path(__file__).resolve().parent / "faq_akademik.csv"
 DEFAULT_THRESHOLD: float = 0.18
 DEFAULT_TOP_K: int = 3
 
-DEFAULT_DEEPSEEK_BASE_URL: str = "https://api.deepseek.com"
-DEFAULT_DEEPSEEK_MODEL: str = "deepseek-chat"
+DEFAULT_DEEPSEEK_BASE_URL: str = "https://zro.moonmath.ai/v1"
+DEFAULT_DEEPSEEK_MODEL: str = "deepseek-v4.1-flash"
 DEFAULT_LLM_TEMPERATURE: float = 0.1
-DEFAULT_LLM_MAX_TOKENS: int = 512
-DEFAULT_LLM_TIMEOUT: float = 15.0
+DEFAULT_LLM_MAX_TOKENS: int = 2048
+DEFAULT_LLM_TIMEOUT: float = 25.0
 
 REQUIRED_COLUMNS: list[str] = [
     "id",
@@ -231,13 +231,24 @@ def preprocess_text(text: object) -> str:
     return normalized
 
 
+def strip_stopwords(text: object) -> str:
+    """Menormalkan teks lalu membuang kata fungsi umum (INDONESIAN_STOPWORDS)."""
+    clean = preprocess_text(text)
+    if not clean:
+        return ""
+    stop_set = set(INDONESIAN_STOPWORDS)
+    tokens = [tok for tok in clean.split() if tok not in stop_set]
+    return " ".join(tokens)
+
+
 def load_faq_data(csv_path: str | Path = DEFAULT_CSV_PATH) -> pd.DataFrame:
     """
     Memuat dataset FAQ dari file CSV, memvalidasi skema & keunikan ID,
-    serta membentuk kolom virtual 'search_text'.
+    serta membentuk kolom virtual 'search_text' dan 'question_text'.
 
-    Kolom 'search_text' menggabungkan kategori, pertanyaan (digandakan 2x untuk
-    memberi bobot lebih tinggi pada istilah pertanyaan), dan jawaban.
+    - 'search_text': gabungan kategori, pertanyaan (digandakan 2x), dan jawaban.
+    - 'question_text': gabungan kategori dan pertanyaan (untuk mencegah dilusi
+      skor pada kueri mahasiswa yang sangat singkat atau mengandung typo).
     """
     path = Path(csv_path)
     if not path.is_file():
@@ -276,7 +287,10 @@ def load_faq_data(csv_path: str | Path = DEFAULT_CSV_PATH) -> pd.DataFrame:
         + " "
         + df["jawaban"]
     )
-    df["search_text"] = combined_text.apply(preprocess_text)
+    df["search_text"] = combined_text.apply(strip_stopwords)
+    df["question_text"] = (df["kategori"] + " " + df["pertanyaan"]).apply(
+        strip_stopwords
+    )
 
     if (df["search_text"] == "").all():
         raise ValueError("Seluruh baris 'search_text' kosong setelah pra-pemrosesan.")
@@ -285,19 +299,14 @@ def load_faq_data(csv_path: str | Path = DEFAULT_CSV_PATH) -> pd.DataFrame:
 
 
 # ==============================================================================
-# 2. MESIN RETRIEVER TF-IDF & COSINE SIMILARITY
+# 2. MESIN RETRIEVER HYBRID TF-IDF (WORD + CHAR_WB) & COSINE SIMILARITY
 # ==============================================================================
 
 
 def build_tfidf_index(df: pd.DataFrame) -> tuple[TfidfVectorizer, csr_matrix]:
     """
-    Membangun objek TfidfVectorizer dan matriks TF-IDF dari kolom 'search_text'.
-
-    Menggunakan:
-    - ngram_range=(1, 2) untuk menangkap kata tunggal dan frasa 2 kata.
-    - sublinear_tf=True (1 + log(tf)) agar dokumen panjang tidak mendominasi skor.
-    - token_pattern=r"(?u)\\b\\w+\\b" agar nilai huruf tunggal (A, B, C, D, E) tetap terindeks.
-    - stop_words Bahasa Indonesia ringan untuk mengurangi noise kata fungsi.
+    Membangun objek TfidfVectorizer level kata (word n-gram) dan matriks TF-IDF
+    dari kolom 'search_text'.
     """
     if "search_text" not in df.columns:
         raise ValueError("DataFrame harus memiliki kolom 'search_text'.")
@@ -306,7 +315,6 @@ def build_tfidf_index(df: pd.DataFrame) -> tuple[TfidfVectorizer, csr_matrix]:
         ngram_range=(1, 2),
         sublinear_tf=True,
         token_pattern=r"(?u)\b\w+\b",
-        stop_words=INDONESIAN_STOPWORDS,
     )
     tfidf_matrix = vectorizer.fit_transform(df["search_text"])
     return vectorizer, tfidf_matrix
@@ -314,15 +322,47 @@ def build_tfidf_index(df: pd.DataFrame) -> tuple[TfidfVectorizer, csr_matrix]:
 
 def initialize_rag_engine(csv_path: str | Path = DEFAULT_CSV_PATH) -> dict[str, Any]:
     """
-    Memuat dataset CSV dan menginisialisasi indeks TF-IDF.
+    Memuat dataset CSV dan menginisialisasi indeks Hybrid Multi-View TF-IDF:
+    1. Word N-gram (1, 2) pada dokumen lengkap ('search_text')
+    2. Char-WB N-gram (3, 5) pada dokumen lengkap — tahan typo & variasi imbuhan
+    3. Word N-gram (1, 2) & Char-WB (3, 5) pada ringkasan judul/pertanyaan ('question_text')
+
     Dirancang untuk dibungkus dengan @st.cache_resource pada app.py.
     """
     df = load_faq_data(csv_path)
     vectorizer, tfidf_matrix = build_tfidf_index(df)
+
+    char_vectorizer = TfidfVectorizer(
+        analyzer="char_wb",
+        ngram_range=(3, 5),
+        sublinear_tf=True,
+    )
+    char_matrix = char_vectorizer.fit_transform(df["search_text"])
+
+    q_word_vectorizer = TfidfVectorizer(
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+        token_pattern=r"(?u)\b\w+\b",
+    )
+    q_word_matrix = q_word_vectorizer.fit_transform(df["question_text"])
+
+    q_char_vectorizer = TfidfVectorizer(
+        analyzer="char_wb",
+        ngram_range=(3, 5),
+        sublinear_tf=True,
+    )
+    q_char_matrix = q_char_vectorizer.fit_transform(df["question_text"])
+
     return {
         "df": df,
         "vectorizer": vectorizer,
         "tfidf_matrix": tfidf_matrix,
+        "char_vectorizer": char_vectorizer,
+        "char_matrix": char_matrix,
+        "q_word_vectorizer": q_word_vectorizer,
+        "q_word_matrix": q_word_matrix,
+        "q_char_vectorizer": q_char_vectorizer,
+        "q_char_matrix": q_char_matrix,
     }
 
 
@@ -333,20 +373,44 @@ def retrieve_faq(
 ) -> list[dict[str, Any]]:
     """
     Mencari Top-k entri FAQ yang paling mirip dengan pertanyaan pengguna
-    menggunakan Cosine Similarity pada ruang vektor TF-IDF.
+    menggunakan Hybrid Multi-View Cosine Similarity (Word + Char-WB TF-IDF)
+    sehingga tetap akurat pada pertanyaan singkat, sinonim, maupun typo ringan.
     """
     df: pd.DataFrame = engine["df"]
     vectorizer: TfidfVectorizer = engine["vectorizer"]
     tfidf_matrix: csr_matrix = engine["tfidf_matrix"]
 
     k = max(1, min(int(top_k), len(df)))
-    clean_query = preprocess_text(query)
+    clean_query = strip_stopwords(query)
 
     if not clean_query:
         scores = np.zeros(len(df), dtype=float)
     else:
-        query_vec = vectorizer.transform([clean_query])
-        scores = cosine_similarity(query_vec, tfidf_matrix).flatten()
+        sim_word = cosine_similarity(
+            vectorizer.transform([clean_query]), tfidf_matrix
+        ).flatten()
+
+        if "char_vectorizer" in engine and "q_word_vectorizer" in engine:
+            sim_char = cosine_similarity(
+                engine["char_vectorizer"].transform([clean_query]),
+                engine["char_matrix"],
+            ).flatten()
+            sim_q_word = cosine_similarity(
+                engine["q_word_vectorizer"].transform([clean_query]),
+                engine["q_word_matrix"],
+            ).flatten()
+            sim_q_char = cosine_similarity(
+                engine["q_char_vectorizer"].transform([clean_query]),
+                engine["q_char_matrix"],
+            ).flatten()
+            scores = (
+                0.35 * sim_word
+                + 0.25 * sim_char
+                + 0.25 * sim_q_word
+                + 0.15 * sim_q_char
+            )
+        else:
+            scores = sim_word
 
     top_indices = np.argsort(scores)[::-1][:k]
 
@@ -471,15 +535,22 @@ def generate_llm_answer(
         max_retries=1,
     )
 
-    response = client.chat.completions.create(
-        model=resolved_model,
-        messages=[
+    request_kwargs: dict[str, Any] = {
+        "model": resolved_model,
+        "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": build_user_prompt(query, references)},
         ],
-        temperature=DEFAULT_LLM_TEMPERATURE,
-        max_tokens=DEFAULT_LLM_MAX_TOKENS,
-    )
+        "temperature": DEFAULT_LLM_TEMPERATURE,
+        "max_tokens": DEFAULT_LLM_MAX_TOKENS,
+    }
+
+    default_effort = "none" if "zro.moonmath.ai" in resolved_base_url else ""
+    reasoning_effort = _get_config_value("LLM_REASONING_EFFORT", default_effort)
+    if reasoning_effort:
+        request_kwargs["reasoning_effort"] = reasoning_effort
+
+    response = client.chat.completions.create(**request_kwargs)
 
     content = response.choices[0].message.content if response.choices else None
     if not content or not content.strip():
@@ -559,8 +630,8 @@ def ask_academic_assistant(
     references = retrieve_faq(query=query, engine=engine, top_k=top_k)
     max_score = references[0]["score"] if references else 0.0
 
-    # Input 1 kata acak / gibberish yang sama sekali tidak ada di kosakata (TC-04)
-    if max_score <= 0.0 and len(meaningful_tokens) <= 1:
+    # Input 1 kata acak / gibberish yang berada di bawah ambang batas (TC-04)
+    if max_score < threshold and len(meaningful_tokens) <= 1:
         return {
             "answer": (
                 "Maaf, input yang Anda masukkan terlalu singkat atau tidak dikenali. "

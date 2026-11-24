@@ -1,0 +1,452 @@
+/* ============================================================================
+   DESIGN SYSTEM: DARK FOREST GLASSMORPHISM (Asisten Akademik PNM)
+   Terinspirasi dari tata letak 3-zona panel gelap bergaya kaca modern.
+   Seluruh warna menggunakan CSS custom properties & memenuhi kontras WCAG AA.
+   ============================================================================ */
+
+:root {
+    --bg-canvas: #0b1310;
+    --bg-canvas-accent: #132820;
+    --bg-panel: rgba(20, 31, 27, 0.92);
+    --bg-sidebar: rgba(16, 25, 22, 0.96);
+    --bg-card: rgba(33, 47, 41, 0.82);
+    --bg-card-hover: rgba(45, 64, 56, 0.94);
+    --bg-user-bubble: rgba(25, 62, 49, 0.88);
+    --bg-pill: rgba(255, 255, 255, 0.06);
+
+    --border-subtle: rgba(255, 255, 255, 0.10);
+    --border-hover: rgba(52, 211, 153, 0.42);
+    --border-active: rgba(52, 211, 153, 0.65);
+
+    --text-primary: #eef4f0;
+    --text-secondary: #a3b6ac;
+    --text-muted: #768b80;
+
+    --accent-emerald: #34d399;
+    --accent-emerald-soft: rgba(52, 211, 153, 0.14);
+    --accent-amber: #fbbf24;
+    --accent-amber-soft: rgba(251, 191, 36, 0.14);
+    --accent-rose: #fb7185;
+    --accent-rose-soft: rgba(251, 113, 133, 0.14);
+
+    --radius-sm: 10px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-pill: 999px;
+}
+
+/* 1. Kanvas Utama & Latar Forest Obsidian Halus */
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(circle at 12% 18%, rgba(25, 68, 50, 0.36) 0%, transparent 45%),
+        radial-gradient(circle at 88% 82%, rgba(20, 56, 42, 0.30) 0%, transparent 48%),
+        var(--bg-canvas);
+    color: var(--text-primary);
+}
+
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+.block-container {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1rem !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    max-width: 1520px !important;
+}
+
+/* 2. Zona 1: Sidebar Kiri (Navigation Rail) */
+section[data-testid="stSidebar"] {
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-subtle);
+}
+
+section[data-testid="stSidebar"] > div:first-child {
+    padding-top: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.brand-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.brand-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.brand-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent-emerald);
+    background: var(--accent-emerald-soft);
+    border: 1px solid var(--border-hover);
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-pill);
+}
+
+.nav-section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 1rem 0 0.5rem 0.25rem;
+}
+
+/* Tombol Sidebar Bergaya Pill & Menu */
+section[data-testid="stSidebar"] .stButton > button {
+    border-radius: var(--radius-pill) !important;
+    border: 1px solid var(--border-subtle) !important;
+    background: var(--bg-pill) !important;
+    color: var(--text-primary) !important;
+    font-size: 0.86rem !important;
+    font-weight: 500 !important;
+    padding: 0.52rem 0.9rem !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    transition: background 0.18s ease, border-color 0.18s ease !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button:hover {
+    background: var(--bg-card-hover) !important;
+    border-color: var(--border-hover) !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button[kind="primary"] {
+    background: var(--accent-emerald-soft) !important;
+    border: 1px solid var(--border-active) !important;
+    color: var(--text-primary) !important;
+    justify-content: center !important;
+    font-weight: 600 !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button[kind="primary"]:hover {
+    background: rgba(52, 211, 153, 0.24) !important;
+}
+
+/* Kartu Status Sistem di Bawah Sidebar (Adaptasi Card Referensi) */
+.status-card {
+    margin-top: 1rem;
+    padding: 0.95rem 1rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(180deg, rgba(33, 50, 43, 0.85) 0%, rgba(20, 31, 27, 0.95) 100%);
+    border: 1px solid var(--border-subtle);
+}
+
+.status-card-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.status-card-desc {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    margin-bottom: 0.65rem;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+}
+
+.status-pill.online {
+    background: var(--accent-emerald-soft);
+    color: #6ee7b7;
+    border: 1px solid var(--border-hover);
+}
+
+.status-pill.fallback {
+    background: var(--accent-amber-soft);
+    color: #fcd34d;
+    border: 1px solid rgba(251, 191, 36, 0.38);
+}
+
+.status-pill.shield {
+    background: var(--accent-rose-soft);
+    color: #fda4af;
+    border: 1px solid rgba(251, 113, 133, 0.38);
+}
+
+/* 3. Zona 2 & Zona 3: Panel Kaca Mengambang (st.container dengan border=True) */
+[data-testid="stVerticalBlockBorderWrapper"] {
+    background: var(--bg-panel) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 0.25rem !important;
+    backdrop-filter: blur(12px);
+}
+
+/* Header Zona 2: Jelajah Topik & FAQ */
+.panel-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.25rem 0.6rem 0.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 0.65rem;
+}
+
+.panel-header-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.count-pill {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--bg-pill);
+    border: 1px solid var(--border-subtle);
+    padding: 0.18rem 0.6rem;
+    border-radius: var(--radius-pill);
+}
+
+.category-divider-pill {
+    text-align: center;
+    margin: 0.55rem 0 0.45rem 0;
+}
+
+.category-divider-pill span {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid var(--border-subtle);
+    padding: 0.16rem 0.75rem;
+    border-radius: var(--radius-pill);
+}
+
+/* Input Search di Zona 2 */
+div[data-testid="stTextInput"] input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-pill) !important;
+    color: var(--text-primary) !important;
+    padding-left: 0.9rem !important;
+    font-size: 0.86rem !important;
+}
+
+div[data-testid="stTextInput"] input:focus {
+    border-color: var(--border-active) !important;
+    box-shadow: 0 0 0 1px var(--border-active) !important;
+}
+
+/* Kartu Pertanyaan di Zona 2 (berbasis st.button yang rapi & aksesibel keyboard) */
+.topic-list-wrap .stButton > button {
+    width: 100% !important;
+    text-align: left !important;
+    justify-content: flex-start !important;
+    white-space: normal !important;
+    height: auto !important;
+    min-height: 3.1rem !important;
+    padding: 0.65rem 0.85rem !important;
+    border-radius: var(--radius-md) !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    color: var(--text-primary) !important;
+    font-size: 0.83rem !important;
+    line-height: 1.4 !important;
+    margin-bottom: 0.15rem !important;
+    transition: background 0.16s ease, border-color 0.16s ease, transform 0.12s ease !important;
+}
+
+.topic-list-wrap .stButton > button:hover {
+    background: var(--bg-card-hover) !important;
+    border-color: var(--border-hover) !important;
+    transform: translateY(-1px);
+}
+
+/* 4. Zona 3: Header Identitas Terpusat di Area Chat */
+.chat-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem 0.75rem 0.9rem 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 0.5rem;
+}
+
+.chat-hero-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.55rem;
+    background: linear-gradient(135deg, rgba(52, 211, 153, 0.25), rgba(16, 185, 129, 0.10));
+    border: 1.5px solid var(--border-active);
+    margin-bottom: 0.45rem;
+}
+
+.chat-hero-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.chat-hero-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin: 0.15rem 0 0.35rem 0;
+}
+
+.chat-hero-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Gelembung Chat Dark-Glass */
+[data-testid="stChatMessage"] {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.85rem 1rem !important;
+    margin-bottom: 0.65rem !important;
+}
+
+.msg-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.msg-sender-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.msg-sender-name {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.msg-badge {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--accent-emerald);
+    background: var(--accent-emerald-soft);
+    border: 1px solid var(--border-hover);
+    padding: 0.08rem 0.45rem;
+    border-radius: 6px;
+}
+
+.msg-time {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Expander Referensi Pedoman */
+[data-testid="stExpander"] {
+    background: rgba(13, 21, 18, 0.65) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-sm) !important;
+    margin-top: 0.5rem !important;
+}
+
+[data-testid="stExpander"] summary {
+    font-size: 0.82rem !important;
+    color: var(--text-secondary) !important;
+}
+
+.ref-card {
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-subtle);
+    margin-bottom: 0.5rem;
+}
+
+.ref-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.35rem;
+}
+
+.ref-pasal {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.ref-score {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #6ee7b7;
+    background: var(--accent-emerald-soft);
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--radius-pill);
+}
+
+.ref-body {
+    font-size: 0.80rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* Kotak Input Chat Rounded di Zona 3 */
+[data-testid="stChatInput"] {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+[data-testid="stChatInput"]:focus-within {
+    border-color: var(--border-active) !important;
+}
+
+/* Empty State pencarian topik */
+.empty-topic-state {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-secondary);
+    font-size: 0.84rem;
+    border: 1px dashed var(--border-subtle);
+    border-radius: var(--radius-md);
+    margin-top: 0.5rem;
+}
+
+/* Responsif untuk Layar Tablet & HP */
+@media (max-width: 768px) {
+    .block-container {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+    .chat-hero-avatar {
+        width: 44px;
+        height: 44px;
+        font-size: 1.3rem;
+    }
+}
